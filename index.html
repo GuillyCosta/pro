@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pro - Jogo</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <!-- Bootstrap core CSS
+  <link href="docs/css/bootstrap.min.css" rel="stylesheet">-->
+  <style>
+  body {
+  	background-color: #F9F9F9;
+  }
+
+  .tela {
+	position: fixed;
+	background-color: #E3E3E3;
+	width: 200px;
+	height: 200px;
+	border: 5px solid #2A2A2A;
+	margin: 10px;
+  }
+
+  #circulo, #quadrado {
+	background-color: #FEFEFE;
+	width: 105px;
+	height: 105px;
+	border: 7px solid #2A2A2A;
+	margin: 10px;
+	font-align: center;
+  }
+
+  #circulo {
+  	border-radius: 50%;
+  }
+
+  #triangulo, #estrela {
+  	border: none;
+  	background-color: transparent;
+  	padding: 0;
+  }
+
+  #triangulo {
+	width: 120px;
+	height: 120px;
+  }
+
+  #estrela { 
+  	width: 150px; 
+  	height: 150px;
+  }
+
+  .resDv {
+  	margin-top: 20px;
+  }
+  
+  #tela1 {
+	top: 150px;
+	left: 120px;
+  }
+
+  #tela2{
+	top: 150px;
+	left: 340px;  	
+  }
+  
+  #tela3{
+	top: 370px;
+	left: 120px;
+  }
+  
+  #tela4{
+	top: 370px;
+	left: 340px;
+  }
+  
+  .resDv {
+  	position: absolute;
+  	width: 400px;
+  	float: right;
+  	left: 50%;
+  	top: 10%;
+  }
+
+  .res {
+	background-color: #E3E3E3;
+	border: 5px solid #2A2A2A;
+	margin: 10px;
+  }
+
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( ".draggable" ).draggable();
+  } );
+  </script>
+</head>
+<body>
+
+<div class="4telas">
+  <div class="tela12">
+	<div id="tela1" class="tela">
+	</div>
+	<div id="tela2" class="tela">
+	</div>
+  </div>
+  <div class="tela34">
+	<div id="tela3" class="tela">
+	</div>
+	<div id="tela4" class="tela">
+	</div>
+  </div>
+</div>
+
+<div class="container">
+	<div id="circulo" class="ui-widget-content draggable elemento">
+	</div>
+	<canvas id="triangulo" class="ui-widget-content draggable elemento">
+	</canvas>
+	<div id="quadrado" class="ui-widget-content draggable elemento">
+	</div>
+	<canvas id="estrela" class="ui-widget-content draggable elemento" width=300 height=300></canvas>
+</div>
+
+<div id="resDv" class="res resDv">
+	<h1>Pro</h1>
+	<p>Jogador 1</p>
+	<p>Tempo: <span id="timer">0 s</span></p>
+	<p>Num. Tentativas: <span id="tentNum">0</span></p>
+	<p>Ultima Jogada: <span id="ultJog"></span></p>
+	<p>Resposta: <span id="respPc" class=""></span></p>
+	<p>Resultado: <span id="reslPc" class=""></span></p>
+	<button id="btn">Compare</button>
+	<button id="btnRes">Ver resposta</button>
+	<button id="btnNovJg">Novo Jogo</button>
+</div>
+
+<script>
+$(document).ready(function() {
+
+function drawTri(val) {
+    var canvas = document.getElementById('triangulo');
+    if (canvas.getContext) {
+        var objctx = canvas.getContext('2d');
+        objctx.beginPath();
+        objctx.moveTo(150, 20);
+        objctx.lineTo(30, 140);
+        objctx.lineTo(270, 140);
+        objctx.closePath();
+        objctx.strokeStyle="#2A2A2A";
+        objctx.lineWidth=25;
+        objctx.stroke();
+        objctx.fillStyle=val;
+    	objctx.fill();
+
+    } else {
+        alert('You need HTML5 compatible browser to see this demo.');
+    }
+};
+
+function drawEstr(val) {
+    var canvas = document.getElementById('estrela');
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+	    function drawStar(cx, cy, spikes, outerRadius, innerRadius) {
+	        var rot = Math.PI / 2 * 3;
+	        var x = cx;
+	        var y = cy;
+	        var step = Math.PI / spikes;
+	
+	        ctx.strokeSyle = "#000";
+	        ctx.beginPath();
+	        ctx.moveTo(cx, cy - outerRadius)
+	        for (i = 0; i < spikes; i++) {
+	            x = cx + Math.cos(rot) * outerRadius;
+	            y = cy + Math.sin(rot) * outerRadius;
+	            ctx.lineTo(x, y)
+	            rot += step
+	
+	            x = cx + Math.cos(rot) * innerRadius;
+	            y = cy + Math.sin(rot) * innerRadius;
+	            ctx.lineTo(x, y)
+	            rot += step
+	        }
+	        ctx.lineTo(cx, cy - outerRadius)
+	        ctx.closePath();
+	        ctx.lineWidth=25;
+	        ctx.strokeStyle="#2A2A2A";
+	        ctx.stroke();
+	        ctx.fillStyle=val;
+	        ctx.fill();
+	    }
+	    drawStar(150, 165, 5, 130, 65);
+    } else {
+        alert('You need HTML5 compatible browser to see this demo.');
+    } 
+};
+
+var val = "#FEFEFE";
+
+drawTri(val);
+drawEstr(val);
+
+var start = new Date;
+
+setInterval(function() {
+    $('#timer').text(Math.round((new Date - start) / 1000) + " s");
+}, 1000);
+
+var comprTela1 = $("#tela1").outerWidth();
+var altrTela1 = $("#tela1").outerHeight();
+var posTela1 = document.getElementById('tela1');
+
+var posTela1Left = (window.innerWidth * 0.2);
+var posTela1Top = (window.innerHeight * 0.2);
+
+posTela1.style.position = "absolute";
+posTela1.style.left = posTela1Left + 'px';
+posTela1.style.top = posTela1Top + 'px';
+
+var posTela2 = document.getElementById('tela2');
+posTela2.style.position = "absolute";
+posTela2.style.left = (posTela1Left + comprTela1 + 15)+'px';
+posTela2.style.top = posTela1Top+'px';
+
+var posTela3 = document.getElementById('tela3');
+posTela3.style.position = "absolute";
+posTela3.style.left = posTela1Left+'px';
+posTela3.style.top = (posTela1Top + altrTela1 + 15)+'px';
+
+var posTela4 = document.getElementById('tela4');
+posTela4.style.position = "absolute";
+posTela4.style.left = (posTela1Left + comprTela1 + 15)+'px';
+posTela4.style.top = (posTela1Top + altrTela1 + 15)+'px';
+
+tela1Pos = $("#tela1").position();
+tela1Top = tela1Pos.top;
+tela1Right = tela1Pos.left + $("#tela1").outerWidth();
+tela1Bottom = tela1Pos.top + $("#tela1").outerHeight();
+tela1Left = tela1Pos.left;
+
+tela2Pos = $("#tela2").position();
+tela2Top = tela2Pos.top;
+tela2Right = tela2Pos.left + $("#tela2").outerWidth();
+tela2Bottom = tela2Pos.top + $("#tela2").outerHeight();
+tela2Left = tela2Pos.left;
+
+tela3Pos = $("#tela3").position();
+tela3Top = tela3Pos.top;
+tela3Right = tela3Pos.left + $("#tela3").outerWidth();
+tela3Bottom = tela3Pos.top + $("#tela3").outerHeight();
+tela3Left = tela3Pos.left;
+
+tela4Pos = $("#tela4").position();
+tela4Top = tela4Pos.top;
+tela4Right = tela4Pos.left + $("#tela4").outerWidth();
+tela4Bottom = tela4Pos.top + $("#tela4").outerHeight();
+tela4Left = tela4Pos.left;
+
+var posElemLeft = (window.innerWidth * 0.05);
+var posCircTop = (window.innerHeight * 0.05);
+var posTriTop = (posCircTop+15);
+var posQuadTop = (posTriTop+15);
+var posEstrTop = (posQuadTop+15);
+
+var circPos = $("#circulo").position();
+var circTopIni = posCircTop;
+var circRightIni = posElemLeft + $("#circulo").outerWidth();
+var circBottomIni = posCircTop + $("#circulo").outerHeight();
+var circLeftIni = posElemLeft;
+
+var triPos = $("#triangulo").position();
+var triTopIni = posTriTop;
+var triRightIni = posElemLeft + $("#triangulo").outerWidth();
+var triBottomIni = posTriTop + $("#triangulo").outerHeight();
+var triLeftIni = posElemLeft;
+
+var quadPos = $("#quadrado").position();
+var quadTopIni = posQuadTop;
+var quadRightIni = posElemLeft + $("#quadrado").outerWidth();
+var quadBottomIni = posQuadTop + $("#quadrado").outerHeight();
+var quadLeftIni = posElemLeft;
+
+var estrPos = $("#estrela").position();
+var estrTopIni = posEstrTop;
+var estrRightIni = posElemLeft + $("#estrela").outerWidth();
+var estrBottomIni = posEstrTop + $("#estrela").outerHeight();
+var estrLeftIni = posElemLeft;
+
+var posCirc = 0;
+var circTop = circTopIni;
+var circRight = circRightIni;
+var circBottom = circBottomIni;
+var circLeft = circLeftIni;
+
+var posTri = 0;
+var triTop = 0;
+var triRight = 0;
+var triBottom = 0;
+var triLeft = 0;
+
+var posQuad = 0;
+var quadTop = 0;
+var quadRight = 0;
+var quadBottom = 0;
+var quadLeft = 0;
+
+var posEstr = 0;
+var estrTop = 0;
+var estrRight = 0;
+var estrBottom = 0;
+var estrLeft = 0;
+
+$("#circulo").data("cLeft", circLeftIni)
+.data("cTop", circTopIni);
+
+$("#triangulo").data("tLeft", triLeftIni)
+.data("tTop", triTopIni);
+
+$("#quadrado").data("qLeft", quadLeftIni)
+.data("qTop", quadTopIni);
+
+$("#estrela").data("eLeft", estrLeftIni)
+.data("eTop", estrTopIni);
+
+var posResDv = document.getElementById('resDv');
+posResDv.style.position = "absolute";
+posResDv.style.left = (tela4Right + 15) + 'px';
+posResDv.style.top = (tela2Top + 15) + 'px';
+
+var varCirc = "C";
+var varTri = "T";
+var varQuad = "Q";
+var varEstr = "E";
+
+var corCirc = -1;
+var corTri = -1;
+var corQuad = -1;
+var corEstr = -1;
+
+$( "#circulo" ).click(function(){
+	if ((corCirc == 0)||(corCirc == -1)) {
+		$( "#circulo" ).css("backgroundColor","blue");
+		corCirc = 1;
+	} else if (corCirc == 1) {
+		$( "#circulo" ).css("backgroundColor","green");
+		corCirc = 2;
+	} else if (corCirc == 2) {
+		$( "#circulo" ).css("backgroundColor","yellow");
+		corCirc = 3;
+	} else if (corCirc == 3) {
+		$( "#circulo" ).css("backgroundColor","red");
+		corCirc = 0;
+	};
+});
+
+$( "#triangulo" ).click(function(){
+	var colorTri = "";
+	if ((corTri == 0)||(corTri == -1)) {
+		colorTri = "blue";
+		corTri = 1;
+	} else if (corTri == 1) {
+		colorTri = "green";
+		corTri = 2;
+	} else if (corTri == 2) {
+		colorTri = "yellow";
+		corTri = 3;
+	} else if (corTri == 3) {
+		colorTri = "red";
+		corTri = 0;
+	};
+	drawTri(colorTri);
+});
+
+$( "#quadrado" ).click(function(){
+	if ((corQuad == 0)||(corQuad == -1)) {
+		$( "#quadrado" ).css("backgroundColor","blue");
+		corQuad = 1;
+	} else if (corQuad == 1) {
+		$( "#quadrado" ).css("backgroundColor","green");
+		corQuad = 2;
+	} else if (corQuad == 2) {
+		$( "#quadrado" ).css("backgroundColor","yellow");
+		corQuad = 3;
+	} else if (corQuad == 3) {
+		$( "#quadrado" ).css("backgroundColor","red");
+		corQuad = 0;
+	};
+});
+
+$( "#estrela" ).click(function(){
+	var colorEstr = "";
+	if ((corEstr == 0)||(corEstr == -1)) {
+		colorEstr = "blue";
+		corEstr = 1;
+	} else if (corEstr == 1) {
+		colorEstr = "green";
+		corEstr = 2;
+	} else if (corEstr == 2) {
+		colorEstr = "yellow";
+		corEstr = 3;
+	} else if (corEstr == 3) {
+		colorEstr = "red";
+		corEstr = 0;
+	};
+	drawEstr(colorEstr);
+});
+
+$(".elemento").on("click mouseleave",function(){
+
+	circPos = $("#circulo").position();
+    circTop = circPos.top;
+    circRight = circPos.left + $("#circulo").outerWidth();
+    circBottom = circPos.top + $("#circulo").outerHeight();
+    circLeft = circPos.left;
+
+    triPos = $("#triangulo").position();
+    triTop = triPos.top;
+    triRight = triPos.left + $("#triangulo").outerWidth();
+    triBottom = triPos.top + $("#triangulo").outerHeight();
+    triLeft = triPos.left;
+
+    quadPos = $("#quadrado").position();
+    quadTop = quadPos.top;
+    quadRight = quadPos.left + $("#quadrado").outerWidth();
+    quadBottom = quadPos.top + $("#quadrado").outerHeight();
+    quadLeft = quadPos.left;
+
+    estrPos = $("#estrela").position();
+    estrTop = estrPos.top;
+    estrRight = estrPos.left + $("#estrela").outerWidth();
+    estrBottom = estrPos.top + $("#estrela").outerHeight();
+    estrLeft = estrPos.left;
+
+    if (!((circTop < tela1Top) || (circBottom > tela4Bottom) || (circLeft < tela1Left) || (circRight > tela4Right) || 
+  		(triTop < tela1Top) || (triBottom > tela4Bottom) || (triLeft < tela1Left) || (triRight > tela4Right) || 
+   		(quadTop < tela1Top) || (quadBottom > tela4Bottom) || (quadLeft < tela1Left) || (quadRight > tela4Right) || 
+   		(estrTop < tela1Top) || (estrBottom > tela4Bottom) || (estrLeft < tela1Left) || (estrRight > tela4Right)) && 
+   		(((corCirc !== -1) || (corTri !== -1) || (corQuad !== -1) || (corEstr !== -1)) && 
+   		(((corCirc !== corTri) && (corCirc !== corQuad) && (corCirc !== corEstr) && 
+   		(corTri !== corQuad) && (corQuad !== corEstr))))) {
+    	posPro = 1;
+    } else {
+    	posPro = 0;
+    }
+
+});
+
+var elem = ['C','T','Q','E'];
+var corInd = ['0','1','2','3'];
+
+var elemSort = [];
+var corSort = [];
+var elemCorSort = [];
+var length = elem.length;
+for (var i = 0; i < length; i++) {
+    elemSort.push(elem.splice(
+        Math.floor(Math.random() * elem.length), 1
+    )[0]);
+    corSort.push(corInd.splice(
+        Math.floor(Math.random() * elem.length), 1
+    )[0]);
+    elemCorSort[i] = elemSort[i] + corSort[i];
+};
+
+var pro = ["","","",""];
+var resMsg = "";
+
+if ((circTop < tela1Top) || (circBottom > tela4Bottom) || (circLeft < tela1Left) || (circRight > tela4Right) || 
+		(triTop < tela1Top) || (triBottom > tela4Bottom) || (triLeft < tela1Left) || (triRight > tela4Right) || 
+		(quadTop < tela1Top) || (quadBottom > tela4Bottom) || (quadLeft < tela1Left) || (quadRight > tela4Right) || 
+		(estrTop < tela1Top) || (estrBottom > tela4Bottom) || (estrLeft < tela1Left) || (estrRight > tela4Right)) {
+	posPro = 0;
+};
+
+var color = "";
+var resElem = "";
+var resCor = "";
+var numTent = 0;
+
+$( "#btn" ).click(function(){
+	$('#reslPc').html('');
+	if (posPro == 1) {
+		pro = ["","","",""];
+		resElem = "";
+		resCor = "";
+		resMsg = "";
+		if ((circTop >= tela1Top) && (circBottom <= tela1Bottom) && (circLeft >= tela1Left) && (circRight <= tela1Right)) {
+			pro[0] = varCirc + corCirc;
+		} else if ((circTop >= tela2Top) && (circBottom <= tela2Bottom) && (circLeft >= tela2Left) && (circRight <= tela2Right)) {
+			pro[1] = varCirc + corCirc;
+		} else if ((circTop >= tela3Top) && (circBottom <= tela3Bottom) && (circLeft >= tela3Left) && (circRight <= tela3Right)) {
+			pro[2] = varCirc + corCirc;
+		} else if ((circTop >= tela4Top) && (circBottom <= tela4Bottom) && (circLeft >= tela4Left) && (circRight <= tela4Right)) {
+			pro[3] = varCirc + corCirc;
+		};
+		if ((triTop >= tela1Top) && (triBottom <= tela1Bottom) && (triLeft >= tela1Left) && (triRight <= tela1Right)) {
+			pro[0] = varTri + corTri;
+		} else if ((triTop >= tela2Top) && (triBottom <= tela2Bottom) && (triLeft >= tela2Left) && (triRight <= tela2Right)) {
+			pro[1] = varTri + corTri;
+		} else if ((triTop >= tela3Top) && (triBottom <= tela3Bottom) && (triLeft >= tela3Left) && (triRight <= tela3Right)) {
+			pro[2] = varTri + corTri;
+		} else if ((triTop >= tela4Top) && (triBottom <= tela4Bottom) && (triLeft >= tela4Left) && (triRight <= tela4Right)) {
+			pro[3] = varTri + corTri;
+		};
+		if ((quadTop >= tela1Top) && (quadBottom <= tela1Bottom) && (quadLeft >= tela1Left) && (quadRight <= tela1Right)) {
+			pro[0] = varQuad + corQuad;
+		} else if ((quadTop >= tela2Top) && (quadBottom <= tela2Bottom) && (quadLeft >= tela2Left) && (quadRight <= tela2Right)) {
+			pro[1] = varQuad + corQuad;
+		} else if ((quadTop >= tela3Top) && (quadBottom <= tela3Bottom) && (quadLeft >= tela3Left) && (quadRight <= tela3Right)) {
+			pro[2] = varQuad + corQuad;
+		} else if ((quadTop >= tela4Top) && (quadBottom <= tela4Bottom) && (quadLeft >= tela4Left) && (quadRight <= tela4Right)) {
+			pro[3] = varQuad + corQuad;
+		};
+		if ((estrTop >= tela1Top) && (estrBottom <= tela1Bottom) && (estrLeft >= tela1Left) && (estrRight <= tela1Right)) {
+			pro[0] = varEstr + corEstr;
+		} else if ((estrTop >= tela2Top) && (estrBottom <= tela2Bottom) && (estrLeft >= tela2Left) && (estrRight <= tela2Right)) {
+			pro[1] = varEstr + corEstr;
+		} else if ((estrTop >= tela3Top) && (estrBottom <= tela3Bottom) && (estrLeft >= tela3Left) && (estrRight <= tela3Right)) {
+			pro[2] = varEstr + corEstr;
+		} else if ((estrTop >= tela4Top) && (estrBottom <= tela4Bottom) && (estrLeft >= tela4Left) && (estrRight <= tela4Right)) {
+			pro[3] = varEstr + corEstr;
+		};
+		for (var i = 0; i < length; i++) {
+	    	resElem = pro[i].split("");
+	    	resCor = elemCorSort[i].split(""); 
+	    	if (resElem[1] === resCor[1]) {
+	    		var j = i + 1;
+	    		if (resElem[1] == 0) {
+	    			color = "red";
+	    		} else if (resElem[1] == 1) {
+	    			color = "blue";
+	    		} else if (resElem[1] == 2) {
+	    			color = "green";
+	    		} else if (resElem[1] == 3) {
+	    			color = "yellow";
+	    		};
+	    		$('#tela'+j).css("backgroundColor",color);
+	    	};
+		    if (pro[i] !== elemCorSort[i]) {
+		    	resMsg = "errou!";
+		    	if (resElem[0] !== resCor[0]) {
+			    	if (resElem[0] === "C") {
+			    		$("#circulo").animate(
+			    			{ "left": $("#circulo").data("cLeft"), 
+			    		    	"top": $("#circulo").data("cTop")
+							}, "slow");
+			    	} else if (resElem[0] === "T") {
+			    		$("#triangulo").animate(
+			    	            { "left": $("#triangulo").data("tLeft"), 
+			    	                "top": $("#triangulo").data("tTop")
+			    	            }, "slow");
+			    	} else if (resElem[0] === "Q") {
+			    		$("#quadrado").animate(
+			    	            { "left": $("#quadrado").data("qLeft"), 
+			    	                "top": $("#quadrado").data("qTop")
+			    	            }, "slow");
+			    	} else if (resElem[0] === "E") {
+			    		$("#estrela").animate(
+			    	            { "left": $("#estrela").data("eLeft"), 
+			    	                "top": $("#estrela").data("eTop")
+			    	            }, "slow");
+			    	};
+		    	} else {
+		    		if (resElem[0] === "C") {
+			    		$("#circulo").css("backgroundColor","#FEFEFE");
+			    	} else if (resElem[0] === "T") {
+			    		var novColorTri = "#FEFEFE";
+			    		drawTri(novColorTri);
+			    	} else if (resElem[0] === "Q") {
+			    		$("#quadrado").css("backgroundColor","#FEFEFE");
+			    	} else if (resElem[0] === "E") {
+			    		var novColorEstr = "#FEFEFE";
+			    		drawEstr(novColorEstr);
+			    	};
+		    	}
+		    } else {
+		    	resMsg = "acertou!";
+		    }
+		};
+	    numTent++;
+	    $('#tentNum').html(numTent);
+		$('#ultJog').html(pro);
+		$('#reslPc').html(resMsg);
+	} else {
+		$('#reslPc').html("Erro na disposicao e/ou cores das pecas");
+	};
+});
+
+
+$("#btnRes").click(function() {
+	$('#respPc').html(elemCorSort);
+});
+
+});
+
+</script>
+
+</body>
+</html>
